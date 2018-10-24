@@ -40,5 +40,20 @@ func main() {
 		ctx.JSON(http.StatusOK, todo)
 	})
 
+	router.PUT("/todos/:id", func(ctx *gin.Context) {
+		time.Sleep(1 * time.Second)
+		id := ctx.Param("id")
+		var todo Todo
+		if err := db.First(&todo, id).Error; err != nil {
+			fmt.Println(err)
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		todo.Completed = !todo.Completed
+		db.Save(&todo)
+
+		ctx.JSON(http.StatusOK, todo)
+	})
+
 	router.Run(":4000")
 }
