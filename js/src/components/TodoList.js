@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { request, setTodos, requestFinished } from '../modules/todos'
+import { request, setTodos, requestFinished, toggle, toggleFinished, updateTodo } from '../modules/todos'
 import axios from 'axios';
 
 class TodoList extends Component {
@@ -9,14 +9,25 @@ class TodoList extends Component {
   }
 
   render() {
+    const { fetching, toggling, todos } = this.props
+    const { handleToggleTodo } = this.props
+
     return (
       <div>
         {
-          this.props.fetching
+          fetching
             ? <p>Now Loading...</p>
             : (<ul>
-              {this.props.todos.map(todo => (
-                <li key={todo.id}>{todo.title}</li>
+              {todos.map(todo => (
+                <li key={todo.id}>
+                  <input
+                    type="checkbox"
+                    checked={todo.completed}
+                    onChange={() => handleToggleTodo(todo.id)}
+                    disabled={toggling.indexOf(todo.id) >= 0}
+                  />
+                  {todo.title}
+                </li>
               ))}
             </ul>)
         }
@@ -26,10 +37,11 @@ class TodoList extends Component {
 }
 
 const mapStateToProps = state => {
-  const { fetching, todos } = state.todos
+  const { toggling, fetching, todos } = state.todos
 
   return {
     fetching,
+    toggling,
     todos,
   }
 }
@@ -46,8 +58,20 @@ const mapDispatchToProps = dispatch => {
     dispatch(requestFinished())
   }
 
+  const handleToggleTodo = async (id) => {
+    dispatch(toggle(id))
+    try {
+      const res = await axios.put(`/todos/${id}`)
+      dispatch(updateTodo(res.data))
+    } catch (err) {
+      console.error(err)
+    }
+    dispatch(toggleFinished(id))
+  }
+
   return {
     fetchTodos,
+    handleToggleTodo,
   }
 }
 

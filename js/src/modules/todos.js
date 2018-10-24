@@ -1,5 +1,6 @@
 const initialState = {
   fetching: false,
+  toggling: [],
   todos: [],
 }
 
@@ -7,6 +8,9 @@ const REQUEST = 'REQUEST'
 const REQUEST_FINISHED = 'REQUEST_FINISHED'
 const SET_TODOS = 'SET_TODOS'
 const ADD_TODO = 'ADD_TODO'
+const TOGGLE = 'TOGGLE'
+const TOGGLE_FINISHED = 'TOGGLE_FINISHED'
+const UPDATE_TODO = 'UPDATE_TODO'
 
 export const request = () => ({
   type: REQUEST,
@@ -20,6 +24,18 @@ export const setTodos = todos => ({
 })
 export const addTodo = todo => ({
   type: ADD_TODO,
+  todo,
+})
+export const toggle = id => ({
+  type: TOGGLE,
+  id,
+})
+export const toggleFinished = id => ({
+  type: TOGGLE_FINISHED,
+  id,
+})
+export const updateTodo = todo => ({
+  type: UPDATE_TODO,
   todo,
 })
 
@@ -44,6 +60,21 @@ export default (state = initialState, action) => {
       return {
         ...state,
         todos: [...state.todos, action.todo],
+      }
+    case TOGGLE:
+      return {
+        ...state,
+        toggling: [...state.toggling, action.id],
+      }
+    case TOGGLE_FINISHED:
+      return {
+        ...state,
+        toggling: state.toggling.filter(id => id !== action.id),
+      }
+    case UPDATE_TODO:
+      return {
+        ...state,
+        todos: state.todos.map(t => t.id === action.todo.id ? action.todo : t)
       }
     default:
       return state
