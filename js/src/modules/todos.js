@@ -6,6 +6,7 @@ const initialState = {
 const REQUEST = 'REQUEST'
 const REQUEST_FINISHED = 'REQUEST_FINISHED'
 const SET_TODOS = 'SET_TODOS'
+const ADD_TODO = 'ADD_TODO'
 
 export const request = () => ({
   type: REQUEST,
@@ -16,6 +17,10 @@ export const requestFinished = () => ({
 export const setTodos = todos => ({
   type: SET_TODOS,
   todos,
+})
+export const addTodo = todo => ({
+  type: ADD_TODO,
+  todo,
 })
 
 export default (state = initialState, action) => {
@@ -34,6 +39,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         todos: action.todos,
+      }
+    case ADD_TODO:
+      return {
+        ...state,
+        todos: [...state.todos, action.todo],
       }
     default:
       return state
