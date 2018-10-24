@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -18,6 +19,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/todos", func(ctx *gin.Context) {
+		time.Sleep(1 * time.Second)
 		var todos []Todo
 		db.Find(&todos)
 
@@ -25,6 +27,7 @@ func main() {
 	})
 
 	router.POST("/todos", func(ctx *gin.Context) {
+		time.Sleep(1 * time.Second)
 		var todo Todo
 
 		if err := ctx.ShouldBind(&todo); err != nil {
