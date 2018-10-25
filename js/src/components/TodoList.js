@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { request, setTodos, requestFinished, toggle, toggleFinished, updateTodo } from '../modules/todos'
+import { request, setTodos, requestFinished, toggle, toggleFinished, updateTodo, changeFilter } from '../modules/todos'
 import axios from 'axios';
+import TodoFilter from './TodoFilter';
 
 class TodoList extends Component {
   componentDidMount() {
@@ -9,16 +10,17 @@ class TodoList extends Component {
   }
 
   render() {
-    const { fetching, toggling, todos } = this.props
-    const { handleToggleTodo } = this.props
+    const { fetching, toggling, visibleTodos, currentFilter } = this.props
+    const { handleToggleTodo, handleChangeFilter } = this.props
 
     return (
       <div>
+        <TodoFilter currentFilter={currentFilter} handleChangeFilter={handleChangeFilter} />
         {
           fetching
             ? <p>Now Loading...</p>
             : (<ul>
-              {todos.map(todo => (
+              {visibleTodos.map(todo => (
                 <li key={todo.id}>
                   <input
                     type="checkbox"
@@ -37,12 +39,26 @@ class TodoList extends Component {
 }
 
 const mapStateToProps = state => {
-  const { toggling, fetching, todos } = state.todos
+  const { toggling, fetching, todos, currentFilter } = state.todos
+
+  let visibleTodos
+  switch (currentFilter) {
+    case 'All':
+      visibleTodos = todos
+      break
+    case 'Incompleted':
+      visibleTodos = todos.filter(todo => !todo.completed)
+      break
+    case 'Completed':
+      visibleTodos = todos.filter(todo => todo.completed)
+      break
+  }
 
   return {
     fetching,
     toggling,
-    todos,
+    visibleTodos,
+    currentFilter,
   }
 }
 
@@ -69,9 +85,12 @@ const mapDispatchToProps = dispatch => {
     dispatch(toggleFinished(id))
   }
 
+  const handleChangeFilter = filter => dispatch(changeFilter(filter))
+
   return {
     fetchTodos,
     handleToggleTodo,
+    handleChangeFilter,
   }
 }
 

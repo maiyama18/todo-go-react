@@ -1,7 +1,10 @@
+import { filters } from '../constants';
+
 const initialState = {
   fetching: false,
   toggling: [],
   todos: [],
+  currentFilter: filters[0],
 }
 
 const REQUEST = 'REQUEST'
@@ -11,6 +14,7 @@ const ADD_TODO = 'ADD_TODO'
 const TOGGLE = 'TOGGLE'
 const TOGGLE_FINISHED = 'TOGGLE_FINISHED'
 const UPDATE_TODO = 'UPDATE_TODO'
+const CHANGE_FILTER = 'CHANGE_FILTER'
 
 export const request = () => ({
   type: REQUEST,
@@ -37,6 +41,10 @@ export const toggleFinished = id => ({
 export const updateTodo = todo => ({
   type: UPDATE_TODO,
   todo,
+})
+export const changeFilter = filter => ({
+  type: CHANGE_FILTER,
+  filter,
 })
 
 export default (state = initialState, action) => {
@@ -75,6 +83,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         todos: state.todos.map(t => t.id === action.todo.id ? action.todo : t)
+      }
+    case CHANGE_FILTER:
+      return {
+        ...state,
+        currentFilter: action.filter
       }
     default:
       return state
