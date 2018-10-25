@@ -66,7 +66,7 @@ const mapDispatchToProps = dispatch => {
   const fetchTodos = async () => {
     dispatch(request())
     try {
-      const res = await axios.get(`/todos`)
+      const res = await axios.get(`/api/todos`)
       dispatch(setTodos(res.data))
     } catch (err) {
       console.error(err)
@@ -77,7 +77,7 @@ const mapDispatchToProps = dispatch => {
   const handleToggleTodo = async (id) => {
     dispatch(toggle(id))
     try {
-      const res = await axios.put(`/todos/${id}`)
+      const res = await axios.put(`/api/todos/${id}`)
       dispatch(updateTodo(res.data))
     } catch (err) {
       console.error(err)

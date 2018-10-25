@@ -43,7 +43,7 @@ const mapDispatchToProps = dispatch => {
 
     dispatch(submit())
     try {
-      const res = await axios.post(`/todos`, {
+      const res = await axios.post(`/api/todos`, {
         title: text,
       })
       dispatch(addTodo(res.data))

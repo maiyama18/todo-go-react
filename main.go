@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,7 +21,10 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/todos", func(ctx *gin.Context) {
+	router.RedirectTrailingSlash = false
+	router.Use(static.Serve("/", static.LocalFile("./js/build", true)))
+
+	router.GET("/api/todos", func(ctx *gin.Context) {
 		time.Sleep(sleepTime)
 		var todos []Todo
 		db.Find(&todos)
@@ -28,7 +32,7 @@ func main() {
 		ctx.JSON(http.StatusOK, todos)
 	})
 
-	router.POST("/todos", func(ctx *gin.Context) {
+	router.POST("/api/todos", func(ctx *gin.Context) {
 		time.Sleep(sleepTime)
 		var todo Todo
 
@@ -42,7 +46,7 @@ func main() {
 		ctx.JSON(http.StatusOK, todo)
 	})
 
-	router.PUT("/todos/:id", func(ctx *gin.Context) {
+	router.PUT("/api/todos/:id", func(ctx *gin.Context) {
 		time.Sleep(sleepTime)
 		id := ctx.Param("id")
 		var todo Todo
