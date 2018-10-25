@@ -9,6 +9,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+var sleepTime = 300 * time.Millisecond
+
 func main() {
 	db, err := InitDB()
 	if err != nil {
@@ -19,7 +21,7 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/todos", func(ctx *gin.Context) {
-		time.Sleep(1 * time.Second)
+		time.Sleep(sleepTime)
 		var todos []Todo
 		db.Find(&todos)
 
@@ -27,7 +29,7 @@ func main() {
 	})
 
 	router.POST("/todos", func(ctx *gin.Context) {
-		time.Sleep(1 * time.Second)
+		time.Sleep(sleepTime)
 		var todo Todo
 
 		if err := ctx.ShouldBind(&todo); err != nil {
@@ -41,7 +43,7 @@ func main() {
 	})
 
 	router.PUT("/todos/:id", func(ctx *gin.Context) {
-		time.Sleep(1 * time.Second)
+		time.Sleep(sleepTime)
 		id := ctx.Param("id")
 		var todo Todo
 		if err := db.First(&todo, id).Error; err != nil {

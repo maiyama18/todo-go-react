@@ -5,7 +5,7 @@ import { addTodo } from '../modules/todos';
 import { connect } from 'react-redux';
 
 const TodoForm = props => {
-  const { text } = props
+  const { text, submitting } = props
   const { handleChangeText, handleSubmit } = props
 
   return (
@@ -16,16 +16,22 @@ const TodoForm = props => {
         value={text}
         onChange={e => handleChangeText(e.target.value)}
       />
-      <button type="submit">Submit</button>
+      <button 
+        type="submit"
+        disabled={submitting}
+      >
+        Submit
+      </button>
     </form>
   )
 }
 
 const mapStateToProps = state => {
-  const { text } = state.todoForm
+  const { text, submitting } = state.todoForm
 
   return {
     text,
+    submitting,
   }
 }
 
