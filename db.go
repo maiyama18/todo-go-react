@@ -17,9 +17,9 @@ func InitDB() (*gorm.DB, error) {
 
 func insertFixtures(db *gorm.DB) {
 	fixtureTodos := []Todo{
-		{Title: "Learn Programming"},
-		{Title: "Develop Awesome Web Application"},
-		{Title: "Quit Job"},
+		{Title: "Practice Programming"},
+		{Title: "Read the Book"},
+		{Title: "Go to Office"},
 	}
 
 	for _, todo := range fixtureTodos {
